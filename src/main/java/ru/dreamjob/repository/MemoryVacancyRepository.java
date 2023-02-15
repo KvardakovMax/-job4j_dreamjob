@@ -1,5 +1,6 @@
 package ru.dreamjob.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.dreamjob.model.Vacancy;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class MemoryVacancyRepository implements VacancyRepository {
     private static final MemoryVacancyRepository INSTANCE = new MemoryVacancyRepository();
 
@@ -42,7 +44,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
 
     @Override
     public boolean update(Vacancy vacancy) {
-        return vacancies.computeIfPresent(vacancy.getId(), (id, oldVacancy) -> new Vacancy(oldVacancy.getId(), vacancy.getTitle(), vacancy.getDescription(), LocalDateTime.now())) != null;
+        return vacancies.computeIfPresent(vacancy.getId(), (id, oldVacancy) -> new Vacancy(
+                oldVacancy.getId(),
+                vacancy.getTitle(),
+                vacancy.getDescription(),
+                LocalDateTime.now()
+        )) != null;
     }
 
     @Override

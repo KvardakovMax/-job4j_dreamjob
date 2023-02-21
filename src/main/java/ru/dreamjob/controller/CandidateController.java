@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.dreamjob.model.Candidate;
 import ru.dreamjob.repository.CandidateRepository;
 import ru.dreamjob.repository.MemoryCandidateRepository;
+import ru.dreamjob.service.SimpleCandidateService;
 
 @Controller
 @RequestMapping("/candidates")
 public class CandidateController {
 
-    private final CandidateRepository candidateRepository =
-            MemoryCandidateRepository.getInstance();
+    private final SimpleCandidateService service = SimpleCandidateService.getInstance();
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("candidates", candidateRepository.findAll());
+        model.addAttribute("candidates", service.findAll());
         return "candidates/list";
     }
 
@@ -27,13 +27,13 @@ public class CandidateController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Candidate candidate) {
-        candidateRepository.save(candidate);
+        service.save(candidate);
         return "redirect:/candidates";
     }
 
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
-        var candidateOptional = candidateRepository.findById(id);
+        var candidateOptional = service.findById(id);
         if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";
@@ -44,7 +44,7 @@ public class CandidateController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Candidate candidate, Model model) {
-        var updated = candidateRepository.update(candidate);
+        var updated = service.update(candidate);
         if (!updated) {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";
@@ -54,7 +54,7 @@ public class CandidateController {
 
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable int id) {
-        var deleted = candidateRepository.deleteById(id);
+        var deleted = service.deleteById(id);
         if (!deleted) {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";

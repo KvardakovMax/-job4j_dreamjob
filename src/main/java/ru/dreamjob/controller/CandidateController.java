@@ -4,19 +4,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.dreamjob.model.Candidate;
-import ru.dreamjob.repository.CandidateRepository;
-import ru.dreamjob.repository.MemoryCandidateRepository;
 import ru.dreamjob.service.SimpleCandidateService;
 
 @Controller
 @RequestMapping("/candidates")
 public class CandidateController {
 
-    private final SimpleCandidateService service = SimpleCandidateService.getInstance();
+    private final SimpleCandidateService candidateService;
+
+    public CandidateController(SimpleCandidateService candidateService) {
+        this.candidateService = candidateService;
+    }
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("candidates", service.findAll());
+        model.addAttribute("candidates", candidateService.findAll());
         return "candidates/list";
     }
 
@@ -27,13 +29,13 @@ public class CandidateController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Candidate candidate) {
-        service.save(candidate);
+        candidateService.save(candidate);
         return "redirect:/candidates";
     }
 
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
-        var candidateOptional = service.findById(id);
+        var candidateOptional = candidateService.findById(id);
         if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";
@@ -44,7 +46,7 @@ public class CandidateController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Candidate candidate, Model model) {
-        var updated = service.update(candidate);
+        var updated = candidateService.update(candidate);
         if (!updated) {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";
@@ -54,7 +56,7 @@ public class CandidateController {
 
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable int id) {
-        var deleted = service.deleteById(id);
+        var deleted = candidateService.deleteById(id);
         if (!deleted) {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";

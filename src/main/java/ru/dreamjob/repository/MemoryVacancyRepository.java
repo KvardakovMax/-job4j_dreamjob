@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public class MemoryVacancyRepository implements VacancyRepository {
-    private static final MemoryVacancyRepository INSTANCE = new MemoryVacancyRepository();
 
     private int nextId = 1;
 
@@ -24,10 +23,6 @@ public class MemoryVacancyRepository implements VacancyRepository {
         save(new Vacancy(0, "Middle Java Developer", "Mid-level seniority involves having a managerial position over entry-level employees while also reporting to someone with more seniority", LocalDateTime.now()));
         save(new Vacancy(0, "Middle+ Java Developer", "More advanced mid-level employees are sometimes described as \"mid-senior\" to indicate their seniority over other middle management positions.", LocalDateTime.now()));
         save(new Vacancy(0, "Senior Java Developer", "Senior developers may specialize in a specific area, oversee projects, and manage junior developers.", LocalDateTime.now()));
-    }
-
-    public static MemoryVacancyRepository getInstance() {
-        return INSTANCE;
     }
 
     @Override

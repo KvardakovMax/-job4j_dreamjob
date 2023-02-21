@@ -7,7 +7,7 @@ import ru.dreamjob.repository.VacancyRepository;
 import java.util.Collection;
 import java.util.Optional;
 
-public class SimpleVacancyService implements VacancyService{
+public class SimpleVacancyService implements VacancyService {
 
     private static final SimpleVacancyService INSTANCE = new SimpleVacancyService();
 

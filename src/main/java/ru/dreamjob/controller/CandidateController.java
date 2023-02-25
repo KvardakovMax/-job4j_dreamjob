@@ -4,16 +4,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.dreamjob.model.Candidate;
+import ru.dreamjob.service.CandidateService;
+import ru.dreamjob.service.CityService;
 import ru.dreamjob.service.SimpleCandidateService;
 
 @Controller
 @RequestMapping("/candidates")
 public class CandidateController {
 
-    private final SimpleCandidateService candidateService;
+    private final CandidateService candidateService;
 
-    public CandidateController(SimpleCandidateService candidateService) {
+    private final CityService cityService;
+
+    public CandidateController(SimpleCandidateService candidateService, CityService cityService) {
         this.candidateService = candidateService;
+        this.cityService = cityService;
     }
 
     @GetMapping
@@ -23,7 +28,8 @@ public class CandidateController {
     }
 
     @GetMapping("/create")
-    public String getCreationPage() {
+    public String getCreationPage(Model model) {
+        model.addAttribute("cities", cityService.findAll());
         return "candidates/create";
     }
 
@@ -40,6 +46,7 @@ public class CandidateController {
             model.addAttribute("message", "Кандидат не найден");
             return "error/404";
         }
+        model.addAttribute("cities", cityService.findAll());
         model.addAttribute("candidate", candidateOptional.get());
         return "candidates/one";
     }

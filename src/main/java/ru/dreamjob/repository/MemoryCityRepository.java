@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class MemoryCityRepository implements CityRepository{
+public class MemoryCityRepository implements CityRepository {
 
     private final Map<Integer, City> cities = new HashMap<>() {
         {

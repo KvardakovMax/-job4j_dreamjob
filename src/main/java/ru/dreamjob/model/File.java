@@ -41,8 +41,12 @@ public class File {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         File file = (File) o;
         return id == file.id && Objects.equals(path, file.path);
     }

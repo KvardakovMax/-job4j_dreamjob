@@ -15,8 +15,8 @@ public class SimpleVacancyService implements VacancyService {
 
     private final FileService fileService;
 
-    public SimpleVacancyService(VacancyRepository repository, FileService fileService) {
-        this.repository = repository;
+    public SimpleVacancyService(VacancyRepository sql2oVacancyRepository, FileService fileService) {
+        this.repository = sql2oVacancyRepository;
         this.fileService = fileService;
     }
 

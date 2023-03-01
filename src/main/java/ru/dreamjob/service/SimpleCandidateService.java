@@ -39,8 +39,8 @@ public class SimpleCandidateService implements CandidateService {
         }
         var oldFileId = candidate.getFileId();
         saveNewFile(candidate, image);
-        fileService.deleteById(oldFileId);
         var isUpdated = candidateRepository.update(candidate);
+        fileService.deleteById(oldFileId);
         return isUpdated;
     }
 

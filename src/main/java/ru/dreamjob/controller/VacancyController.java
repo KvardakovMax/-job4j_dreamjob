@@ -5,9 +5,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.dreamjob.dto.FileDto;
+import ru.dreamjob.model.User;
 import ru.dreamjob.model.Vacancy;
 import ru.dreamjob.service.CityService;
 import ru.dreamjob.service.VacancyService;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/vacancies")
@@ -23,13 +26,25 @@ public class VacancyController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Guest");
+        }
+        model.addAttribute("user", user);
         model.addAttribute("vacancies", vacancyService.findAll());
         return "vacancies/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
+    public String getCreationPage(Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Guest");
+        }
+        model.addAttribute("user", user);
         model.addAttribute("cities", cityService.findAll());
         return "vacancies/create";
     }

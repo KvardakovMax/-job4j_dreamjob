@@ -10,6 +10,9 @@ import org.sql2o.Sql2oException;
 import ru.dreamjob.model.User;
 import ru.dreamjob.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -21,7 +24,13 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String getRegistrationPage() {
+    public String getRegistrationPage(Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Guest");
+        }
+        model.addAttribute("user", user);
         return "users/register";
     }
 
@@ -37,17 +46,32 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage() {
+    public String getLoginPage(Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Guest");
+        }
+        model.addAttribute("user", user);
         return "users/login";
     }
 
     @PostMapping("/login")
-    public String loginUser(Model model, @ModelAttribute User user) {
+    public String loginUser(Model model, @ModelAttribute User user, HttpServletRequest request) {
         var userOptional = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
         if (userOptional.isEmpty()) {
             model.addAttribute("error", "Wrong email or password");
             return "users/login";
         }
+        var session = request.getSession();
+        session.setAttribute("user", userOptional.get());
         return "redirect:/vacancies";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/users/login";
+    }
+
 }

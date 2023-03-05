@@ -51,7 +51,8 @@ class Sql2oUserRepositoryTest {
     @Test
     public void whenSaveWithSameEmail() {
         sql2oUserRepository.save(new User(0, "max1@gmail.com", "Max", "qwerty")).get();
-        assertThatExceptionOfType(Sql2oException.class).isThrownBy(() -> sql2oUserRepository.save(new User(0, "max1@gmail.com", "Sergey", "1234")));
+        var userOptional = sql2oUserRepository.save(new User(0, "max1@gmail.com", "Sergey", "1234"));
+        assertThat(userOptional).isEmpty();
     }
 
 }

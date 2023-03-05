@@ -2,6 +2,7 @@ package ru.dreamjob.repository;
 
 import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
 import ru.dreamjob.model.User;
 
 import java.util.Collection;
@@ -29,6 +30,9 @@ public class Sql2oUserRepository implements UserRepository {
             int generatedId = query.executeUpdate().getKey(Integer.class);
             user.setId(generatedId);
             return Optional.ofNullable(user);
+        } catch (Sql2oException e) {
+            e.getMessage();
+            return Optional.empty();
         }
     }
 

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.sql2o.Sql2oException;
 import ru.dreamjob.model.User;
 import ru.dreamjob.service.UserService;
 
@@ -30,9 +29,8 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(Model model, @ModelAttribute User user) {
-        try {
-            userService.save(user);
-        } catch (Sql2oException e) {
+        var savedUser = userService.save(user);
+        if (savedUser.isEmpty()) {
             model.addAttribute("error", "This user already exist");
             return "users/register";
         }
